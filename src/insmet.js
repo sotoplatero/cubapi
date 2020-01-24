@@ -1,13 +1,12 @@
 var cheerio = require('cheerio');  
-const fetch = require('node-fetch').default;
+var rp = require('request-promise');
 
 exports.handler = (event, context, callback) => {
 	let response, body;
 
-    fetch('http://www.insmet.cu/asp/link.asp?PRONOSTICO')
-        .then(res => res.text())
-        .then( body => {
-            let $ = cheerio.load( body );
+    rp('http://www.insmet.cu/asp/link.asp?PRONOSTICO')
+        .then( html => {
+            let $ = cheerio.load( html );
             let reDate = /Fecha:\s(\d+\s.+\d{4}).+Hora:\s(\d+:\d{2}\s[a|p]\.m)/;
             let dateToday = $('table.contenidoPagina').text().match( reDate );
             callback(null, {
@@ -23,7 +22,7 @@ exports.handler = (event, context, callback) => {
             })
         })
         .catch( e => {
-            callback(JSON.stringify(e))
+            callback(JSON.stringify(e.data))
         } );
 
 }
