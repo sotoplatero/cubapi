@@ -1,5 +1,7 @@
 [build]
-  functions = "./fn"
+  command = "yarn build"
+  functions = "./src" #  netlify-lambda reads this
+  publish = "fn"  
 [[redirects]]
   from = "/api/*"
   to = "/.netlify/functions/:splat"
